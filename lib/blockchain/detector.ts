@@ -40,12 +40,14 @@ export class ContractDetector {
       const wsProvider = await this.provider.getWsProvider();
 
       // Listen for new blocks and scan for deployments
+      // Sample every 10th block to avoid rate limits with free Alchemy tier
       wsProvider.on('block', async (blockNumber: number) => {
-        // Scan all blocks for testing (will hit rate limits eventually)
-        await this.scanBlock(blockNumber, callback);
+        if (blockNumber % 10 === 0) {
+          await this.scanBlock(blockNumber, callback);
+        }
       });
 
-      logger.info('Contract monitoring started successfully (sampling every 5th block)');
+      logger.info('Contract monitoring started successfully (sampling every 10th block)');
     } catch (error: any) {
       logger.error('Failed to start monitoring', { error: error.message });
       this.isMonitoring = false;
@@ -71,15 +73,20 @@ export class ContractDetector {
       const txHashes = block.transactions as string[];
       let deploymentCount = 0;
 
-      // Process receipts sequentially to avoid batch limits
+      // Process receipts sequentially with delays to avoid rate limits
       // Check each transaction receipt for contract deployments
       for (const txHash of txHashes) {
         try {
+          // Small delay between RPC calls to respect rate limits
+          await this.sleep(100);
+
           // Get receipt (lighter than full transaction)
           const receipt = await this.provider.getTransactionReceipt(txHash);
 
           // If receipt has contractAddress, it's a deployment
           if (receipt?.contractAddress) {
+            // Delay before fetching full transaction
+            await this.sleep(200);
             // Fetch full transaction only for deployments
             const tx = await this.provider.getTransaction(txHash);
             if (tx) {

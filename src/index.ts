@@ -117,9 +117,10 @@ class BaseGuardian {
       const source = await this.sourceFetcher.getSourceCode(contract.address);
       const isVerified = source !== null;
 
-      // Get bytecode if not verified
+      // Get bytecode if not verified (with delay to avoid rate limits)
       let bytecode: string | undefined;
       if (!isVerified) {
+        await this.sleep(500); // Delay to avoid Alchemy rate limits
         bytecode = await this.provider.getCode(contract.address);
       }
 
@@ -298,6 +299,13 @@ class BaseGuardian {
     } catch (error: any) {
       logger.error('Health check failed', { error: error.message });
     }
+  }
+
+  /**
+   * Sleep helper to avoid rate limits
+   */
+  private sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   /**
