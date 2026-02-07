@@ -8,6 +8,7 @@ BaseGuardian is a fully autonomous AI-powered security agent that monitors Base 
 
 ## Live Demo
 
+- **Video Demo**: [Watch on Loom](https://www.loom.com/share/fad602101b8b4a3497aa9b8fe698820e)
 - **Moltbook**: https://www.moltbook.com/u/BaseGuardian
 - **Twitter**: [@LeoLeoArg1](https://twitter.com/LeoLeoArg1)
 - **Smart Contract**: [0xddB1f3e6BD5bDab2d095d4350194398F36733F6a](https://basescan.org/address/0xddB1f3e6BD5bDab2d095d4350194398F36733F6a)
