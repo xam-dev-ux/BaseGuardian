@@ -23,11 +23,12 @@ export class CertificationManager {
 
   /**
    * Certify a safe contract onchain
+   * Note: Accepts safety_score (100 = safe) but smart contract expects risk_score (0 = safe)
    */
   async certifyContract(
     contractAddress: string,
     analysis: {
-      risk_score: number;
+      safety_score: number;
       classification: string;
       threats: string[];
       explanation: string;
@@ -37,12 +38,17 @@ export class CertificationManager {
     try {
       logger.info('Starting onchain certification', { contractAddress });
 
+      // Convert safety_score to risk_score for smart contract (inverted)
+      // safety_score 100 (safest) -> risk_score 0 (lowest risk)
+      const riskScore = 100 - analysis.safety_score;
+
       // Create certification metadata
       const metadata = {
         contract_address: contractAddress,
         chain_id: appConfig.CHAIN_ID,
         certification_date: new Date().toISOString(),
-        risk_score: analysis.risk_score,
+        safety_score: analysis.safety_score,
+        risk_score: riskScore, // For backwards compatibility
         analysis: {
           threats_found: analysis.threats,
           classification: analysis.classification,
@@ -51,7 +57,7 @@ export class CertificationManager {
         },
         guardian: 'BaseGuardian',
         guardian_address: appConfig.AGENT_ADDRESS,
-        version: '1.0.0',
+        version: '1.1.0',
       };
 
       // Upload metadata to IPFS
@@ -75,15 +81,16 @@ export class CertificationManager {
         wallet
       );
 
-      // Submit certification transaction
+      // Submit certification transaction (smart contract expects risk_score)
       logger.info('Submitting certification transaction', {
         contractAddress,
         ipfsHash,
-        riskScore: analysis.risk_score,
+        safetyScore: analysis.safety_score,
+        riskScore: riskScore,
         stakeAmount: ethers.formatEther(stakeAmount),
       });
 
-      const tx = await certContract.certify(contractAddress, ipfsHash, analysis.risk_score, {
+      const tx = await certContract.certify(contractAddress, ipfsHash, riskScore, {
         value: stakeAmount,
       });
 

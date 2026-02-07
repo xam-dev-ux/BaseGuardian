@@ -128,24 +128,21 @@ export class TwitterClient {
     const riskScore = content.riskScore || 0;
     const threats = content.threats || [];
 
-    const threatList = threats
-      .slice(0, 3)
-      .map((t) => `• ${t}`)
-      .join('\n');
+    // Twitter has 280 char limit - keep it short
+    const threat = threats[0] || 'Multiple security issues detected';
+    const severity = riskScore < 40 ? 'CRITICAL' : 'HIGH';
 
-    return `🚨 SCAM ALERT on Base
+    return `🚨 ${severity} SCAM ALERT
 
 Contract: ${shortAddress}
-Risk: ${riskScore}/100 (${riskScore < 40 ? 'CRITICAL' : 'HIGH'})
+Risk: ${riskScore}/100
+Issue: ${threat}
 
-Threats:
-${threatList}
+⛔ DO NOT INTERACT
 
-DO NOT INTERACT ⛔
+https://basescan.org/address/${address}
 
-Details: https://basescan.org/address/${address}
-
-#BaseMainnet #Web3Security #ScamAlert`;
+#BaseMainnet #ScamAlert`;
   }
 
   /**
@@ -157,17 +154,17 @@ Details: https://basescan.org/address/${address}
     const riskScore = content.riskScore || 0;
     const txHash = content.txHash || '';
 
-    return `✅ CONTRACT CERTIFIED on Base
+    return `✅ CONTRACT CERTIFIED
 
 Contract: ${shortAddress}
-Risk Score: ${riskScore}/100 (LOW RISK)
+Risk: ${riskScore}/100 (LOW)
 
-Analysis shows no major threats.
-Always DYOR before interacting!
+No major threats detected
+DYOR before using!
 
-Onchain proof: https://basescan.org/tx/${txHash}
+Proof: https://basescan.org/tx/${txHash}
 
-#BaseCertified #DeFiSafety #BaseMainnet`;
+#BaseCertified #BaseMainnet`;
   }
 
   /**

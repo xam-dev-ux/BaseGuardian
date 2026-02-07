@@ -92,6 +92,13 @@ export class ProviderManager {
   }
 
   /**
+   * Get transaction by hash
+   */
+  async getTransaction(txHash: string): Promise<ethers.TransactionResponse | null> {
+    return await this.httpProvider.getTransaction(txHash);
+  }
+
+  /**
    * Get transaction receipt
    */
   async getTransactionReceipt(txHash: string): Promise<ethers.TransactionReceipt | null> {

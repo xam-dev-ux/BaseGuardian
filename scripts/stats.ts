@@ -90,7 +90,7 @@ async function showStats() {
   try {
     const healthResponse = await fetch('http://localhost:3000/health');
     if (healthResponse.ok) {
-      const health = await healthResponse.json();
+      const health = await healthResponse.json() as { uptime: number; healthy: boolean; timestamp: number };
       const uptimeMinutes = Math.floor(health.uptime / 60);
       const uptimeHours = Math.floor(uptimeMinutes / 60);
       const uptimeRemainder = uptimeMinutes % 60;

@@ -141,7 +141,7 @@ class BaseGuardian {
         contract_address: contract.address,
         source_code: source?.SourceCode,
         is_verified: isVerified,
-        risk_score: analysis.risk_score,
+        risk_score: analysis.safety_score, // DB uses risk_score column but we store safety_score
         classification: analysis.classification,
         threats: JSON.stringify(analysis.threats),
         explanation: analysis.explanation,
@@ -151,7 +151,7 @@ class BaseGuardian {
       logger.info('Analysis complete', {
         address: contract.address,
         classification: analysis.classification,
-        riskScore: analysis.risk_score,
+        safetyScore: analysis.safety_score,
       });
 
       // Take action based on classification
@@ -166,20 +166,24 @@ class BaseGuardian {
 
   /**
    * Take action based on analysis
+   * Note: SCAM_THRESHOLD is now a SAFETY threshold (lower score = more dangerous)
+   * SCAM if safety_score < 40 (configurable via SCAM_THRESHOLD)
    */
   private async takeAction(
     contractAddress: string,
     analysis: any
   ): Promise<void> {
-    // SCAM - Post alert immediately
-    if (analysis.classification === 'SCAM' || analysis.risk_score < appConfig.SCAM_THRESHOLD) {
+    // SCAM - Post alert immediately (low safety score = dangerous)
+    // Note: We invert the threshold check since safety_score is inverted from old risk_score
+    const scamThreshold = 100 - appConfig.SCAM_THRESHOLD; // Convert: 70 risk threshold -> 30 safety threshold
+    if (analysis.classification === 'SCAM' || analysis.safety_score < scamThreshold) {
       logger.warn('SCAM detected, posting alert', { address: contractAddress });
 
       if (appConfig.ENABLE_TWITTER) {
         await this.twitter.postScamAlert({
           contractAddress,
           type: 'scam_alert',
-          riskScore: analysis.risk_score,
+          riskScore: 100 - analysis.safety_score, // Convert back for Twitter display
           threats: analysis.threats,
         });
       }
@@ -187,10 +191,10 @@ class BaseGuardian {
       return;
     }
 
-    // SAFE - Certify onchain
+    // SAFE - Certify onchain (high safety score = safe)
     if (
       analysis.classification === 'SAFE' &&
-      analysis.risk_score >= 80 &&
+      analysis.safety_score >= 80 &&
       analysis.confidence >= 75
     ) {
       logger.info('Safe contract detected, certifying', { address: contractAddress });
@@ -211,7 +215,7 @@ class BaseGuardian {
           await this.twitter.postCertification({
             contractAddress,
             type: 'certification',
-            riskScore: analysis.risk_score,
+            riskScore: 100 - analysis.safety_score, // Convert for display consistency
             txHash,
           });
         }
@@ -223,7 +227,7 @@ class BaseGuardian {
     // SUSPICIOUS - Log and monitor
     logger.info('Suspicious contract detected, monitoring', {
       address: contractAddress,
-      riskScore: analysis.risk_score,
+      safetyScore: analysis.safety_score,
     });
   }
 

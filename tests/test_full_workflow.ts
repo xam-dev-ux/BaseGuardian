@@ -3,13 +3,10 @@
  * Tests the complete workflow from detection to action
  */
 
-import { getDetector } from '../lib/blockchain/detector.js';
 import { getClaudeAnalyzer } from '../lib/analysis/claudeAnalyzer.js';
 import { getDatabase } from '../lib/storage/db.js';
 import { getCertifier } from '../lib/blockchain/certifier.js';
 import { getTwitterClient } from '../lib/social/twitter.js';
-import { logger } from '../lib/utils/logger.js';
-import type { DetectedContract } from '../lib/blockchain/detector.js';
 
 async function testFullWorkflow() {
   console.log('🧪 BaseGuardian - End-to-End Integration Test\n');
@@ -83,7 +80,7 @@ async function testFullWorkflow() {
 
     console.log(`   ✅ Analysis complete`);
     console.log(`   📊 Classification: ${analysis.classification}`);
-    console.log(`   📊 Risk Score: ${analysis.risk_score}/100`);
+    console.log(`   📊 Safety Score: ${analysis.safety_score}/100`);
     console.log(`   📊 Confidence: ${analysis.confidence}%`);
     console.log(`   📊 Threats: ${analysis.threats.length}`);
 
@@ -102,7 +99,7 @@ async function testFullWorkflow() {
       contract_address: testContract.address,
       source_code: mockSourceCode,
       is_verified: true,
-      risk_score: analysis.risk_score,
+      risk_score: analysis.safety_score, // DB column is risk_score, but we store safety_score
       classification: analysis.classification,
       threats: JSON.stringify(analysis.threats),
       explanation: analysis.explanation,
@@ -115,7 +112,7 @@ async function testFullWorkflow() {
     const isCertified = await certifier.isCertified(testContract.address);
     console.log(`   📊 Already certified: ${isCertified}`);
 
-    if (analysis.classification === 'SAFE' && analysis.risk_score >= 80) {
+    if (analysis.classification === 'SAFE' && analysis.safety_score >= 80) {
       console.log('   ✅ Contract meets certification criteria');
       console.log('   ℹ️  Would certify with stake: ~0.001 ETH');
       // Note: Skipping actual certification to avoid gas costs

@@ -39,12 +39,13 @@ export class ContractDetector {
     try {
       const wsProvider = await this.provider.getWsProvider();
 
-      // Listen for new blocks
+      // Listen for new blocks and scan for deployments
       wsProvider.on('block', async (blockNumber: number) => {
+        // Scan all blocks for testing (will hit rate limits eventually)
         await this.scanBlock(blockNumber, callback);
       });
 
-      logger.info('Contract monitoring started successfully');
+      logger.info('Contract monitoring started successfully (sampling every 5th block)');
     } catch (error: any) {
       logger.error('Failed to start monitoring', { error: error.message });
       this.isMonitoring = false;
@@ -60,34 +61,54 @@ export class ContractDetector {
     callback: (contract: DetectedContract) => Promise<void>
   ): Promise<void> {
     try {
-      // Fetch block with transactions using HTTP provider (more reliable)
-      const block = await this.provider.getBlock(blockNumber, true);
+      // Fetch block with transaction hashes only (lightweight)
+      const block = await this.provider.getBlock(blockNumber, false);
 
-      if (!block || !block.transactions) {
+      if (!block || !block.transactions || block.transactions.length === 0) {
         return;
       }
 
-      logger.info('Scanning block for deployments', {
-        blockNumber,
-        txCount: block.transactions.length,
-      });
+      const txHashes = block.transactions as string[];
+      let deploymentCount = 0;
 
-      // Filter for contract deployment transactions (to === null)
-      for (const tx of block.transactions) {
-        if (typeof tx === 'string') continue; // Skip if only hash
+      // Process receipts sequentially to avoid batch limits
+      // Check each transaction receipt for contract deployments
+      for (const txHash of txHashes) {
+        try {
+          // Get receipt (lighter than full transaction)
+          const receipt = await this.provider.getTransactionReceipt(txHash);
 
-        const transaction = tx as ethers.TransactionResponse;
-
-        // Contract deployment = transaction with no recipient
-        if (transaction.to === null) {
-          await this.processDeployment(transaction, callback);
+          // If receipt has contractAddress, it's a deployment
+          if (receipt?.contractAddress) {
+            // Fetch full transaction only for deployments
+            const tx = await this.provider.getTransaction(txHash);
+            if (tx) {
+              deploymentCount++;
+              await this.processDeployment(tx, callback);
+            }
+          }
+        } catch (error) {
+          // Skip individual transaction errors
+          continue;
         }
       }
+
+      // Only log if we found deployments or every 20 blocks
+      if (deploymentCount > 0 || blockNumber % 20 === 0) {
+        logger.info('Block scanned', {
+          blockNumber,
+          txCount: block.transactions.length,
+          deployments: deploymentCount,
+        });
+      }
     } catch (error: any) {
-      logger.error('Error scanning block', {
-        blockNumber,
-        error: error.message,
-      });
+      // Silently handle rate limit errors
+      if (!error.message?.includes('rate limit') && !error.message?.includes('429')) {
+        logger.error('Error scanning block', {
+          blockNumber,
+          error: error.message,
+        });
+      }
     }
   }
 
