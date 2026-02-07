@@ -2,36 +2,47 @@
 
 **Autonomous AI Security Agent for Base Mainnet**
 
-BaseGuardian is an AI-powered security agent that monitors Base Mainnet 24/7, analyzes smart contracts for scams, alerts the community via Twitter, and certifies safe contracts onchain with reputation staking.
+BaseGuardian is a fully autonomous AI-powered security agent that monitors Base Mainnet 24/7, analyzes smart contracts in real-time using Claude Opus 4.5, alerts the community via Twitter about scams, and certifies safe contracts onchain with staked ETH.
+
+**Status**: ✅ Live and operational on Base Mainnet
+
+## Live Demo
+
+- **Moltbook**: https://www.moltbook.com/u/BaseGuardian
+- **Twitter**: [@LeoLeoArg1](https://twitter.com/LeoLeoArg1)
+- **Smart Contract**: [0xddB1f3e6BD5bDab2d095d4350194398F36733F6a](https://basescan.org/address/0xddB1f3e6BD5bDab2d095d4350194398F36733F6a)
+- **Agent Wallet**: [0x85e7fc9c7e3834d9be8d60d1e3718a24d1f96678](https://basescan.org/address/0x85e7fc9c7e3834d9be8d60d1e3718a24d1f96678)
 
 ## Features
 
-- **Real-Time Monitoring**: Detects new contract deployments on Base Mainnet via WebSocket
-- **AI-Powered Analysis**: Uses Claude Opus 4.5 to analyze contracts for security threats
-- **Threat Detection**: Identifies honeypots, rug pulls, hidden mints, and suspicious permissions
-- **Social Media Alerts**: Posts scam warnings on Twitter (rate-limited)
-- **Onchain Certification**: Certifies safe contracts with staked ETH stored in smart contract
-- **IPFS Metadata**: Stores detailed analysis reports on IPFS (Pinata)
-- **SQLite Database**: Tracks all analyses, certifications, and reputation events
-- **Health Monitoring**: HTTP endpoints for status checks and statistics
+- **Real-Time Monitoring**: WebSocket detection of contract deployments (samples every 10th block)
+- **AI-Powered Analysis**: Claude Opus 4.5 with comprehensive security prompt
+- **9 Vulnerability Patterns**: Honeypots, rug pulls, reentrancy, selfdestruct, delegatecall, flash loans, suspicious permissions, token clones, proxy upgrades
+- **Safety Score System**: 0-100 scale where 100 = SAFEST (with cross-validation)
+- **Twitter Alerts**: Automatic scam warnings posted in real-time
+- **Onchain Certification**: Stakes ETH on safe contract certifications
+- **Moltbook Integration**: Posts updates to the AI agent social network
+- **IPFS Metadata**: Stores analysis reports on Pinata
 
 ## Architecture
 
 ```
-BaseGuardian
-├── Blockchain Layer (ethers.js)
-│   ├── WebSocket Provider (real-time events)
-│   ├── Contract Detector (new deployments)
+BaseGuardian Agent
+├── Blockchain Layer (ethers.js v6)
+│   ├── WebSocket Provider (Base Mainnet)
+│   ├── Contract Detector (deployment monitoring)
 │   ├── Source Fetcher (BaseScan API)
-│   └── Certifier (onchain transactions)
-├── Analysis Layer (Claude AI)
-│   └── Security Analyzer (threat detection)
-├── Social Layer (Twitter API)
-│   └── Rate-Limited Posting
+│   └── Certifier (onchain staking)
+├── Analysis Layer (Claude Opus 4.5)
+│   ├── Security Analyzer (9 vulnerability patterns)
+│   └── Cross-Validation (score ↔ classification)
+├── Social Layer
+│   ├── Twitter Client (scam alerts)
+│   └── Moltbook Skill (agent network)
 ├── Storage Layer
-│   ├── SQLite (state/analytics)
+│   ├── SQLite (local state)
 │   └── IPFS/Pinata (metadata)
-└── Health Layer (Express)
+└── Health Layer (Express.js)
     └── HTTP endpoints (/health, /stats)
 ```
 
@@ -39,29 +50,90 @@ BaseGuardian
 
 **CertificationRegistry**: `0xddB1f3e6BD5bDab2d095d4350194398F36733F6a`
 
-- Network: Base Mainnet (Chain ID: 8453)
-- Features: Certification with staking, challenges, slashing
-- Min Stake: 0.001 ETH
-- Challenge Bond: 0.005 ETH
+| Parameter | Value |
+|-----------|-------|
+| Network | Base Mainnet (Chain ID: 8453) |
+| Min Stake | 0.000001 ETH |
+| Challenge Bond | 0.005 ETH |
+| Slashing | 50% on valid challenge |
+
+## How It Works
+
+### 1. Detection Phase
+- Subscribes to Base Mainnet via WebSocket
+- Samples every 10th block to respect RPC rate limits
+- Detects contract deployments (receipt.contractAddress != null)
+- Stores deployment in SQLite database
+
+### 2. Analysis Phase
+- Fetches verified source code from BaseScan
+- Falls back to bytecode analysis if not verified
+- Sends to Claude Opus 4.5 with security-focused prompt
+- Detects 9 vulnerability patterns:
+
+| Pattern | Description |
+|---------|-------------|
+| Honeypot | Can buy but not sell, hidden fees |
+| Rug Pull | Owner can mint/drain liquidity |
+| Reentrancy | External calls before state updates |
+| Selfdestruct | Can destroy contract and steal ETH |
+| Delegatecall | Can execute arbitrary code |
+| Flash Loan | Price oracle manipulation risks |
+| Suspicious Permissions | Owner can pause/modify balances |
+| Token Clone | Impersonating known tokens |
+| Proxy Upgradeable | Upgradeable logic risks |
+
+### 3. Classification
+
+| Safety Score | Classification | Action |
+|--------------|----------------|--------|
+| 80-100 | SAFE | Certify onchain + Tweet |
+| 40-79 | SUSPICIOUS | Log only |
+| 0-39 | SCAM | Tweet alert |
+
+Cross-validation ensures classification matches score (auto-corrects inconsistencies).
+
+### 4. Actions
+
+**SCAM Detected**:
+```
+🚨 CRITICAL SCAM ALERT
+
+Contract: 0xcB1F...d10
+Risk: 95/100
+Issue: Honeypot - users cannot sell
+
+⛔ DO NOT INTERACT
+
+https://basescan.org/address/...
+```
+
+**SAFE Contract**:
+1. Upload metadata to IPFS
+2. Call `CertificationRegistry.certify()` with stake
+3. Post certification tweet
+
+## Project Structure
 
 ```
 BaseGuardian/
-├── openclaw.json5          # OpenClaw agent configuration
-├── src/                    # Main agent code
-│   └── index.ts           # Agent entry point
-├── lib/                    # Core libraries
-│   ├── blockchain/         # Provider, detector, source fetcher, certifier
-│   ├── analysis/           # Claude AI analyzer
-│   ├── social/             # Twitter client
-│   ├── storage/            # SQLite + IPFS (Pinata)
-│   ├── health/             # Health check server
-│   └── utils/              # Logger + config
-├── contracts/              # Smart contracts
-│   └── CertificationRegistry.sol
-├── data/                   # Runtime data
-│   ├── baseguardian.db     # SQLite database (auto-created)
-│   └── logs/               # Daily logs
-└── tests/                  # Unit + integration tests
+├── src/
+│   └── index.ts              # Agent entry point
+├── lib/
+│   ├── blockchain/           # Provider, detector, certifier
+│   ├── analysis/             # Claude AI analyzer
+│   ├── social/               # Twitter client
+│   ├── storage/              # SQLite + IPFS
+│   ├── health/               # Health server
+│   └── utils/                # Logger, config
+├── skills/
+│   └── moltbook-interact/    # Moltbook posting skill
+├── data/
+│   ├── baseguardian.db       # SQLite database
+│   └── logs/                 # Daily logs
+├── tests/                    # Integration tests
+├── openclaw.json5            # OpenClaw configuration
+└── .env                      # Configuration (not committed)
 ```
 
 ## Installation
@@ -69,287 +141,145 @@ BaseGuardian/
 ### Prerequisites
 - Node.js >= 20.0.0
 - Base RPC endpoint (Alchemy recommended)
-- API keys (Anthropic, Twitter, BaseScan, Pinata)
-- Agent wallet with >= 0.001 ETH on Base Mainnet
+- API keys: Anthropic, Twitter, BaseScan, Pinata
+- Agent wallet with >= 0.0001 ETH on Base Mainnet
 
 ### Setup
 
-1. **Clone and Install**
 ```bash
-git clone https://github.com/yourusername/baseguardian.git
+# Clone repository
+git clone https://github.com/xam-dev-ux/BaseGuardian.git
 cd BaseGuardian
+
+# Install dependencies
 npm install
-```
 
-2. **Configure Environment**
-```bash
+# Configure environment
 cp .env.example .env
-# Edit .env with your API keys and configuration
-```
+# Edit .env with your API keys
 
-3. **Fund Agent Wallet**
-```bash
-# Send >= 0.001 ETH to AGENT_ADDRESS on Base Mainnet for gas + stakes
-```
-
-4. **Build Project**
-```bash
+# Build
 npm run build
-```
 
-5. **Run Agent**
-```bash
+# Run
 npm start
-```
-
-## Usage
-
-### Development Mode
-```bash
-npm run dev  # Runs with tsx watch (auto-reload)
-```
-
-### Production Mode
-```bash
-npm run build
-npm start:prod  # Runs compiled JavaScript
-```
-
-### Health Monitoring
-```bash
-# Agent info
-curl http://localhost:3000/
-
-# Health status
-curl http://localhost:3000/health
-
-# Daily statistics
-curl http://localhost:3000/stats
-```
-
-### View Logs
-```bash
-# All logs
-tail -f data/logs/combined-$(date +%Y-%m-%d).log
-
-# Errors only
-tail -f data/logs/error-$(date +%Y-%m-%d).log
 ```
 
 ## Configuration
 
-See `.env.example` for all available configuration options.
-
-### Key Environment Variables
+Key environment variables:
 
 ```bash
 # Blockchain
 BASE_RPC_URL=https://base-mainnet.g.alchemy.com/v2/YOUR_KEY
 BASE_WSS_URL=wss://base-mainnet.g.alchemy.com/v2/YOUR_KEY
 BASESCAN_API_KEY=your_key
-CERTIFICATION_CONTRACT_ADDRESS=0xddB1f3e6BD5bDab2d095d4350194398F36733F6a
 
 # AI
 ANTHROPIC_API_KEY=sk-ant-...
 CLAUDE_MODEL=claude-opus-4-5-20251101
 
-# Social (Twitter only)
+# Twitter
 TWITTER_API_KEY=...
 TWITTER_API_SECRET=...
 TWITTER_ACCESS_TOKEN=...
 TWITTER_ACCESS_SECRET=...
-ENABLE_TWITTER=true
 
 # Storage
 PINATA_API_KEY=...
 PINATA_SECRET_KEY=...
-SQLITE_DB_PATH=./data/baseguardian.db
 
-# Agent Wallet (NEVER COMMIT)
+# Agent (NEVER COMMIT)
 AGENT_PRIVATE_KEY=0x...
 AGENT_ADDRESS=0x...
 
-# Feature Flags
-ENABLE_CERTIFICATIONS=true
-ENABLE_AUTO_STAKE=true
-
 # Thresholds
+MIN_STAKE_ETH=0.000001
 SCAM_THRESHOLD=70
-MIN_STAKE_ETH=0.001
 ```
 
-## Development
-
-### Run Tests
-```bash
-npm test
-
-# Unit tests only
-npm run test:unit
-
-# Integration tests
-npm run test:integration
-```
-
-### Lint Code
-```bash
-npm run lint
-```
-
-### Format Code
-```bash
-npm run format
-```
-
-## How It Works
-
-### 1. Detection Phase
-- Agent subscribes to Base Mainnet WebSocket
-- Detects new contract deployments (tx.to === null)
-- Waits for 2 block confirmations
-- Stores deployment in database
-
-### 2. Analysis Phase
-- Fetches verified source code from BaseScan
-- If not verified, analyzes bytecode patterns
-- Sends to Claude AI with comprehensive security prompt
-- Detects vulnerabilities:
-  - Honeypot patterns (buy-only, hidden fees)
-  - Rug pull indicators (owner minting, drainable liquidity)
-  - Reentrancy vulnerabilities
-  - Dangerous opcodes (SELFDESTRUCT, DELEGATECALL)
-  - Flash loan vulnerabilities
-  - Suspicious permissions
-- Receives structured response:
-  - `safety_score` (0-100, where 100 = SAFEST)
-  - `classification` (SAFE/SUSPICIOUS/SCAM)
-  - `threats` (array of specific findings)
-  - `confidence` (0-100)
-  - `patterns` (detected vulnerability types)
-
-### 3. Action Phase
-
-**If SCAM (safety_score < 40)**:
-- Posts public alert on Twitter
-- Includes contract address, risk level, threats
-- Warns users "DO NOT INTERACT"
-
-**If SAFE (safety_score >= 80, confidence >= 75)**:
-- Creates certification metadata JSON
-- Uploads to IPFS via Pinata
-- Calls CertificationRegistry.certify() with stake
-- Posts certification announcement on Twitter
-
-**If SUSPICIOUS (safety_score 40-79)**:
-- Logs for monitoring
-- No public action taken
-
-### 4. Reputation System
-- Certifications are onchain with staked ETH
-- Anyone can challenge a certification (0.005 ETH bond)
-- Challenges trigger automatic re-analysis
-- If challenge valid: guardian slashed 50%, challenger rewarded
-- If challenge invalid: challenger loses bond
-
-## Testing
+## Health Endpoints
 
 ```bash
-npm test                  # Run all tests
-npm run test:unit         # Unit tests only
-npm run test:integration  # Integration tests only
+curl http://localhost:3000/        # Agent info
+curl http://localhost:3000/health  # Health status
+curl http://localhost:3000/stats   # Daily statistics
 ```
 
-## Security Considerations
+## Real Detection Examples
 
-1. **Private Keys**: Never commit `.env` file. Keep private keys secure.
-2. **Wallet Balance**: Maintain >= 0.001 ETH for gas fees
-3. **Rate Limits**: Twitter limited to 12 posts/hour
-4. **API Keys**: Rotate regularly, use environment variables
-5. **Stakes at Risk**: Your certifications are backed by real ETH
+The agent has detected multiple scam contracts:
 
-## Twitter Bot Guidelines
+| Contract | Safety Score | Classification |
+|----------|--------------|----------------|
+| 0xcB1F08f68a... | 5 | SCAM (Critical) |
+| 0x1cDF2C7Ac0... | 35 | SCAM |
+| 0x01B427E869... | 5 | SCAM (Critical) |
+| 0x87cA3146e5... | 35 | SCAM |
 
-The agent follows Twitter automation policies:
-- Max 12 posts per hour
-- Minimum 10 seconds between posts
-- No spam or duplicate content
-- Clear disclosure of bot nature
-- Valuable security information only
+All detections triggered automatic Twitter alerts.
+
+## Rate Limiting
+
+| Service | Limit |
+|---------|-------|
+| Alchemy RPC | ~5 calls/sec (free tier) |
+| Twitter | 12 posts/hour |
+| Claude API | Based on plan |
+| Block Sampling | Every 10th block |
+
+RPC throttling implemented with 100-500ms delays between calls.
 
 ## Implementation Status
 
-✅ **Complete & Tested**:
-- [x] Project structure and configuration
-- [x] Smart contract deployed on Base Mainnet
-- [x] Database schema and SQLite setup
-- [x] Blockchain monitoring (WebSocket)
-- [x] Contract deployment detection
-- [x] Source code fetching (BaseScan API)
-- [x] Claude AI integration for analysis
-- [x] Enhanced classification system (safety_score with cross-validation)
-- [x] Twitter posting with rate limiting
+✅ **Complete & Operational**:
+- [x] Real-time contract monitoring
+- [x] Claude Opus 4.5 analysis
+- [x] 9 vulnerability pattern detection
+- [x] Safety score with cross-validation
+- [x] Twitter scam alerts
 - [x] Onchain certification with staking
-- [x] IPFS metadata storage (Pinata)
-- [x] Health check HTTP endpoints
-- [x] Logging and error handling
-- [x] End-to-end flow testing
-- [x] Real-time scam detection on Base Mainnet
+- [x] IPFS metadata storage
+- [x] Moltbook integration
+- [x] Rate limit handling
+- [x] Health monitoring
 
 🎯 **Future Enhancements**:
-- Machine learning scam detection
-- Multi-chain support (Optimism, Arbitrum)
-- Community voting on challenges
-- Browser extension for warnings
-- Mobile app notifications
+- USDC staking (Circle CCTP)
+- Multi-chain support
+- Machine learning detection
+- Browser extension
 
 ## Troubleshooting
 
-### "Insufficient balance" error
-- Top up agent wallet to >= 0.001 ETH on Base Mainnet
+| Error | Solution |
+|-------|----------|
+| "Insufficient balance" | Fund wallet with >= 0.0001 ETH |
+| "429 rate limit" | Using Alchemy free tier, delays added |
+| "WebSocket failed" | Check BASE_WSS_URL |
+| "Twitter 403" | Verify OAuth credentials |
+| "BaseScan NOTOK" | Normal for unverified contracts |
 
-### "WebSocket connection failed"
-- Check BASE_WSS_URL is correct
-- Verify RPC provider has WebSocket enabled
-- Check firewall/network restrictions
+## Security
 
-### "Twitter rate limit exceeded"
-- Wait for rate limit reset (shown in logs)
-- Reduce TWITTER_MAX_POSTS_PER_HOUR in .env
-
-### "IPFS upload failed"
-- Verify Pinata API keys are correct
-- Check Pinata account has sufficient storage
-
-### "Claude API error"
-- Verify ANTHROPIC_API_KEY is valid
-- Check API usage limits/credits
-
-## Contributing
-
-This is a competition entry project. After competition:
-1. Fork the repository
-2. Create feature branch
-3. Make changes with tests
-4. Submit pull request
+- Never commit `.env` file
+- API keys in environment variables only
+- Moltbook credentials in `~/.config/moltbook/`
+- Stakes are real ETH at risk
 
 ## License
 
-MIT License - See LICENSE file
+MIT License
 
 ## Acknowledgments
 
-- Built for OpenClaw Framework competition
-- Uses Claude Opus 4.5 by Anthropic
-- Deployed on Base Mainnet (Coinbase L2)
-- IPFS storage via Pinata
-
-## Contact
-
-- GitHub Issues: Report bugs and feature requests
-- Twitter: TBD (agent account)
+- Built for [OpenClaw USDC Hackathon](https://www.moltbook.com/m/usdc)
+- Powered by [Claude Opus 4.5](https://anthropic.com) (Anthropic)
+- Deployed on [Base Mainnet](https://base.org) (Coinbase L2)
+- Social network: [Moltbook](https://moltbook.com)
 
 ---
 
-**⚠️ Disclaimer**: This agent provides automated analysis but is not infallible. Always do your own research (DYOR) before interacting with any smart contract. The agent's certifications are opinions backed by staked ETH, not guarantees.
+**⚠️ Disclaimer**: This agent provides automated analysis but is not infallible. Always DYOR before interacting with any smart contract.
 
 **🛡️ BaseGuardian - Keeping Base Safe, One Contract at a Time**
