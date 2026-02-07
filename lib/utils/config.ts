@@ -185,7 +185,7 @@ export const appConfig: Config = {
   MAX_CONCURRENT_ANALYSES: getEnvNumber('MAX_CONCURRENT_ANALYSES', false, 5),
   SCAM_THRESHOLD: getEnvNumber('SCAM_THRESHOLD', false, 70),
   WARNING_THRESHOLD: getEnvNumber('WARNING_THRESHOLD', false, 40),
-  MIN_STAKE_ETH: getEnvNumber('MIN_STAKE_ETH', false, 0.001),
+  MIN_STAKE_ETH: getEnvNumber('MIN_STAKE_ETH', false, 0.000001),
 };
 
 // Validate critical configuration

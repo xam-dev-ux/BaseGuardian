@@ -84,7 +84,7 @@ export class HealthCheckServer {
       const balanceBigInt = await provider.getBalance(appConfig.AGENT_ADDRESS);
       balance = balanceBigInt.toString();
       balanceEth = Number(balanceBigInt) / 1e18;
-      balanceSufficient = balanceEth >= 0.001;
+      balanceSufficient = balanceEth >= 0.0001;
     } catch (error: any) {
       logger.error('Balance check failed', { error: error.message });
     }
@@ -106,7 +106,7 @@ export class HealthCheckServer {
         balance,
         balanceEth: balanceEth.toFixed(6),
         sufficient: balanceSufficient,
-        minimumRequired: '0.001 ETH',
+        minimumRequired: '0.0001 ETH',
       },
       stats: {
         contractsScanned: stats.contracts_scanned,

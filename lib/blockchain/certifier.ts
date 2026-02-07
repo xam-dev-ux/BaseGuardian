@@ -69,8 +69,8 @@ export class CertificationManager {
 
       logger.info('Metadata uploaded', { ipfsHash });
 
-      // Calculate stake amount based on confidence (min 0.001 ETH)
-      const stakeEth = Math.max(0.001, (analysis.confidence / 100) * 0.01);
+      // Calculate stake amount based on confidence (min 0.000001 ETH = 1 gwei)
+      const stakeEth = Math.max(0.000001, (analysis.confidence / 100) * 0.0001);
       const stakeAmount = ethers.parseEther(stakeEth.toString());
 
       // Get certification contract

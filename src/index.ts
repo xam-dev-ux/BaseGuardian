@@ -73,8 +73,8 @@ class BaseGuardian {
       balance: `${balanceEth.toFixed(4)} ETH`,
     });
 
-    if (balanceEth < 0.001) {
-      logger.warn('⚠️ Low wallet balance! Need at least 0.001 ETH');
+    if (balanceEth < 0.0001) {
+      logger.warn('⚠️ Low wallet balance! Need at least 0.0001 ETH for gas');
     }
 
     // Test Twitter
@@ -286,9 +286,9 @@ class BaseGuardian {
       const balance = await this.provider.getBalance(appConfig.AGENT_ADDRESS);
       const balanceEth = Number(balance) / 1e18;
 
-      if (balanceEth < 0.001) {
+      if (balanceEth < 0.0001) {
         logger.error('Health check failed - low balance', {
-          balance: `${balanceEth.toFixed(4)} ETH`,
+          balance: `${balanceEth.toFixed(6)} ETH`,
         });
       }
 
