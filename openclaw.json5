@@ -1,0 +1,200 @@
+{
+  // BaseGuardian OpenClaw Agent Configuration
+
+  // Agent Identity
+  agent: {
+    name: "BaseGuardian",
+    emoji: "🛡️",
+    theme: "security-sentinel",
+    description: "Autonomous security agent monitoring Base Mainnet for scams and certifying safe contracts",
+    version: "1.0.0"
+  },
+
+  // AI Model Configuration
+  model: {
+    primary: "claude-opus-4-5-20251101",  // Latest Claude Opus for deep analysis
+    fallback: "claude-sonnet-4-5-20250929", // Sonnet for lighter tasks
+    temperature: 0.2,  // Low temperature for consistent security analysis
+    maxTokens: 16000
+  },
+
+  // Workspace Configuration
+  workspace: {
+    root: "/home/xabier/basedev/BaseGuardian",
+    memory: {
+      enabled: true,
+      file: "MEMORY.md",
+      dailyLogs: true,
+      logsDir: "data/logs",
+      searchEnabled: true
+    }
+  },
+
+  // Tools & Permissions
+  tools: {
+    // Allowed tools for BaseGuardian
+    allow: [
+      "exec",           // Execute TypeScript scripts
+      "web_search",     // Threat intelligence research
+      "browser",        // BaseScan UI verification
+      "message",        // Social media posting
+      "sessions_spawn", // Parallel contract analysis
+      "cron",           // Scheduled monitoring
+      "memory_search"   // Threat database queries
+    ],
+
+    // Exec configuration
+    exec: {
+      allowedCommands: [
+        "node",
+        "tsx",
+        "npm",
+        "sqlite3"
+      ],
+      workingDir: "/home/xabier/basedev/BaseGuardian",
+      timeout: 300000  // 5 minutes max execution
+    }
+  },
+
+  // Autonomous Cron Jobs
+  cron: {
+    jobs: [
+      {
+        name: "monitor-blockchain",
+        schedule: "*/30 * * * * *",  // Every 30 seconds
+        skill: "monitor-blockchain",
+        description: "Scan Base Mainnet for new contract deployments"
+      },
+      {
+        name: "process-social-queue",
+        schedule: "*/2 * * * *",  // Every 2 minutes
+        skill: "publish-alert",
+        args: "--process-queue",
+        description: "Process pending social media posts with rate limiting"
+      },
+      {
+        name: "update-reputation",
+        schedule: "0 */6 * * *",  // Every 6 hours
+        skill: "manage-reputation",
+        args: "--sync",
+        description: "Sync onchain reputation and challenge outcomes"
+      },
+      {
+        name: "daily-stats",
+        schedule: "0 0 * * *",  // Daily at midnight
+        skill: "publish-alert",
+        args: "--post-stats",
+        description: "Post daily statistics summary"
+      },
+      {
+        name: "backup-database",
+        schedule: "0 3 * * *",  // Daily at 3 AM
+        skill: "maintenance",
+        args: "--backup",
+        description: "Backup database to IPFS"
+      }
+    ]
+  },
+
+  // Message Channel Configuration (Custom handlers)
+  messaging: {
+    channels: [
+      {
+        name: "twitter",
+        type: "custom",
+        handler: "lib/social/twitter.ts",
+        config: {
+          rateLimit: {
+            posts: 12,
+            window: "1h"
+          }
+        }
+      },
+      {
+        name: "farcaster",
+        type: "custom",
+        handler: "lib/social/farcaster.ts",
+        config: {
+          rateLimit: {
+            posts: 15,
+            window: "1h"
+          }
+        }
+      }
+    ]
+  },
+
+  // Session Management
+  sessions: {
+    maxConcurrent: 5,      // Analyze up to 5 contracts in parallel
+    timeout: 600000,       // 10 minutes per analysis
+    persistent: true,
+    storeResults: "data/sessions/"
+  },
+
+  // Environment Variables
+  env: {
+    required: [
+      "BASE_RPC_URL",
+      "BASE_WSS_URL",
+      "BASESCAN_API_KEY",
+      "ANTHROPIC_API_KEY",
+      "TWITTER_API_KEY",
+      "TWITTER_API_SECRET",
+      "TWITTER_ACCESS_TOKEN",
+      "TWITTER_ACCESS_SECRET",
+      "NEYNAR_API_KEY",
+      "FARCASTER_SIGNER_UUID",
+      "AGENT_PRIVATE_KEY",
+      "PINATA_API_KEY",
+      "REDIS_URL"
+    ]
+  },
+
+  // Logging Configuration
+  logging: {
+    level: "info",
+    format: "json",
+    destinations: [
+      {
+        type: "file",
+        path: "data/logs/agent.log",
+        rotation: "daily",
+        maxSize: "10m",
+        maxFiles: 30
+      },
+      {
+        type: "console",
+        colorize: true
+      }
+    ]
+  },
+
+  // Health Checks
+  health: {
+    enabled: true,
+    port: 3000,
+    checks: [
+      {
+        name: "blockchain-connection",
+        interval: 60000,
+        handler: "lib/blockchain/health.ts"
+      },
+      {
+        name: "database-connection",
+        interval: 60000,
+        handler: "lib/storage/health.ts"
+      },
+      {
+        name: "social-api-status",
+        interval: 300000,
+        handler: "lib/social/health.ts"
+      },
+      {
+        name: "redis-connection",
+        interval: 60000,
+        handler: "lib/storage/redis-health.ts"
+      }
+    ]
+  }
+}
