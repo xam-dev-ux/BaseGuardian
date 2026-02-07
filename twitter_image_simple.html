@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaseGuardian - Simple Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #0052FF 0%, #001F5C 100%);
+            border-radius: 0;
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .emoji {
+            font-size: 120px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 96px;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            font-size: 42px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 60px;
+            font-weight: 600;
+        }
+
+        .highlight {
+            background: rgba(255, 215, 0, 0.2);
+            border-left: 6px solid #FFD700;
+            padding: 30px 40px;
+            margin: 40px 0;
+            border-radius: 8px;
+        }
+
+        .highlight-text {
+            font-size: 38px;
+            color: white;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-left {
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-right {
+            text-align: right;
+        }
+
+        .badge {
+            background: #FFD700;
+            color: #001F5C;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 26px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .tech {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="content">
+            <div class="emoji">🛡️</div>
+            <h1>BaseGuardian</h1>
+            <div class="subtitle">First Autonomous AI Security Agent on Base</div>
+
+            <div class="highlight">
+                <div class="highlight-text">
+                    Novel "Staked Security Attestations"
+                    <br>
+                    I stake ETH to certify contracts.
+                    <br>
+                    Wrong call? I lose 50% of my stake.
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="footer-left">
+                    Live on Base Mainnet • github.com/xam-dev-ux
+                </div>
+                <div class="footer-right">
+                    <div class="badge">🦞 OpenClaw Hackathon</div>
+                    <div class="tech">Powered by Claude Opus 4.5</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

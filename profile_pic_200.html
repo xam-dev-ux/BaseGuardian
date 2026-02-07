@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Profile 200x200</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0052FF 0%, #00D4FF 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            box-shadow: 0 10px 30px rgba(0, 82, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .glow {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent 70%);
+            animation: pulse 3s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+        .shield {
+            position: relative;
+            z-index: 10;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+        }
+    </style>
+</head>
+<body>
+    <div class="avatar">
+        <div class="glow"></div>
+        <div class="shield">🛡️</div>
+    </div>
+</body>
+</html>

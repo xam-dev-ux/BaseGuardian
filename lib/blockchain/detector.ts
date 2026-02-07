@@ -67,7 +67,7 @@ export class ContractDetector {
         return;
       }
 
-      logger.debug('Scanning block for deployments', {
+      logger.info('Scanning block for deployments', {
         blockNumber,
         txCount: block.transactions.length,
       });
