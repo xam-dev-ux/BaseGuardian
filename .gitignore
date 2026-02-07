@@ -50,3 +50,6 @@ nohup.out
 *.tmp
 *.temp
 .cache/
+
+# ClawHub
+.clawhub/
