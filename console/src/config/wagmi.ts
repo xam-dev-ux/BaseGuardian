@@ -1,13 +1,11 @@
 import { http, createConfig } from 'wagmi'
 import { base } from 'wagmi/chains'
-import { injected, metaMask, coinbaseWallet } from 'wagmi/connectors'
+import { injected } from 'wagmi/connectors'
 
 export const config = createConfig({
   chains: [base],
   connectors: [
-    injected(),
-    metaMask(),
-    coinbaseWallet({ appName: 'BaseGuardian Console' }),
+    injected(), // Detects MetaMask, Coinbase Wallet, and other injected wallets
   ],
   transports: {
     [base.id]: http(),
