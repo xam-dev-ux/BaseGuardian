@@ -246,6 +246,7 @@ RPC throttling implemented with 100-500ms delays between calls.
 - [x] Health monitoring
 
 🎯 **Future Enhancements**:
+- Farcaster alerts via Neynar API (cross-post scam warnings to Warpcast)
 - USDC staking (Circle CCTP)
 - Machine learning detection
 - Multi-agent coordination (distribute block monitoring across agents to analyze 100% of contracts instead of sampling every 10th block)
