@@ -109,10 +109,19 @@ export class TwitterClient {
 
       logSocialPost('twitter', type, false);
 
-      // Handle rate limit errors
+      // Handle specific error codes
       if (error.code === 429) {
         const resetTime = error.rateLimit?.reset || Date.now() + 15 * 60 * 1000;
         logger.warn('Twitter rate limit hit', { resetTime });
+      } else if (error.code === 403) {
+        logger.error('Twitter 403 Forbidden - Check app permissions', {
+          hint: 'Go to developer.twitter.com and ensure your app has "Read and Write" permissions',
+          action: 'Regenerate access tokens after changing permissions',
+        });
+      } else if (error.code === 401) {
+        logger.error('Twitter 401 Unauthorized - Invalid credentials', {
+          hint: 'Check TWITTER_API_KEY, TWITTER_API_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET in .env',
+        });
       }
 
       return null;

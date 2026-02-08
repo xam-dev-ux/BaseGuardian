@@ -261,6 +261,22 @@ export class DatabaseManager {
   // ===== Certifications =====
 
   insertCertification(certification: Certification): number {
+    // Ensure deployment exists (for manual certifications)
+    const existingDeployment = this.getDeployment(certification.contract_address);
+    if (!existingDeployment) {
+      // Insert a minimal deployment record
+      this.db.prepare(`
+        INSERT OR IGNORE INTO deployments (contract_address, deployer_address, tx_hash, block_number, timestamp)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(
+        certification.contract_address,
+        'unknown',
+        certification.tx_hash,
+        0,
+        new Date().toISOString()
+      );
+    }
+
     const stmt = this.db.prepare(`
       INSERT INTO certifications (contract_address, certification_id, ipfs_hash, stake_amount, tx_hash, eas_attestation_uid)
       VALUES (?, ?, ?, ?, ?, ?)
