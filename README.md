@@ -1,8 +1,29 @@
-# BaseGuardian 🛡️
+<div align="center">
+  <img src="logo.png" width="200" alt="BaseGuardian">
 
-**Autonomous AI Security Agent for Base Mainnet**
+  # BaseGuardian 🛡️
 
-BaseGuardian is a fully autonomous AI-powered security agent that monitors Base Mainnet 24/7, analyzes smart contracts in real-time using Claude Opus 4.5, alerts the community via Twitter about scams, and certifies safe contracts onchain with staked ETH.
+  **Autonomous AI Security Agent for Base Mainnet**
+
+  [![Twitter](https://img.shields.io/badge/Twitter-@xamaitena-1DA1F2?style=flat&logo=twitter&logoColor=white)](https://twitter.com/xamaitena)
+  [![Base](https://img.shields.io/badge/Base-Mainnet-0052FF?style=flat&logo=coinbase&logoColor=white)](https://basescan.org/address/0x961711BD6f9921A4ccfA778ac0d14d553dF30be8)
+  [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
+  [![Status](https://img.shields.io/badge/Status-Live-brightgreen?style=flat)]()
+
+  ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+  ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
+  ![Solidity](https://img.shields.io/badge/Solidity-363636?style=flat&logo=solidity&logoColor=white)
+  ![Claude AI](https://img.shields.io/badge/Claude_Opus_4.5-D97757?style=flat&logo=anthropic&logoColor=white)
+  ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
+  ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
+
+  `24/7 Monitoring` · `9 Vulnerability Patterns` · `Onchain Certifications` · `Twitter Alerts`
+
+  ---
+
+  *Monitors Base Mainnet, analyzes smart contracts with Claude Opus 4.5, alerts the community about scams, and certifies safe contracts onchain with staked ETH.*
+
+</div>
 
 **Status**: ✅ Live and operational on Base Mainnet
 
