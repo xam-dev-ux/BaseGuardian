@@ -247,9 +247,8 @@ RPC throttling implemented with 100-500ms delays between calls.
 
 🎯 **Future Enhancements**:
 - USDC staking (Circle CCTP)
-- Multi-chain support
 - Machine learning detection
-- Browser extension
+- Multi-agent coordination (distribute block monitoring across agents to analyze 100% of contracts instead of sampling every 10th block)
 
 ## Troubleshooting
 
