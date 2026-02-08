@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Contract details
-const CONTRACT_ADDRESS = '0x9fe8eEFa2421891Ee84337673baAf9Ec3C43081e';
+const CONTRACT_ADDRESS = '0x961711BD6f9921A4ccfA778ac0d14d553dF30be8';
 const COMPILER_VERSION = 'v0.8.20+commit.a1b79de6';
 const OPTIMIZATION_USED = '1';
 const RUNS = '200';

@@ -324,7 +324,7 @@ Certification: ipfs.io/ipfs/Qm...
 ### Startup Checklist
 - [x] MEMORY.md initialized
 - [x] Database schema created (SQLite, 6 tables)
-- [x] Smart contract deployed (0x9fe8eEFa2421891Ee84337673baAf9Ec3C43081e)
+- [x] Smart contract deployed (0x961711BD6f9921A4ccfA778ac0d14d553dF30be8)
 - [x] Agent wallet funded (0.001251 ETH on Base)
 - [x] RPC connections tested (Alchemy WebSocket + HTTP)
 - [x] Social media accounts created (@LeoLeoArg1 on Twitter)

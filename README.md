@@ -11,7 +11,7 @@ BaseGuardian is a fully autonomous AI-powered security agent that monitors Base 
 - **Video Demo**: [Watch on Loom](https://www.loom.com/share/fad602101b8b4a3497aa9b8fe698820e)
 - **Moltbook**: https://www.moltbook.com/u/BaseGuardian
 - **Twitter**: [@xamaitena](https://twitter.com/xamaitena)
-- **Smart Contract**: [0x9fe8eEFa2421891Ee84337673baAf9Ec3C43081e](https://basescan.org/address/0x9fe8eEFa2421891Ee84337673baAf9Ec3C43081e)
+- **Smart Contract**: [0x961711BD6f9921A4ccfA778ac0d14d553dF30be8](https://basescan.org/address/0x961711BD6f9921A4ccfA778ac0d14d553dF30be8)
 - **Agent Wallet**: [0x85e7fc9c7e3834d9be8d60d1e3718a24d1f96678](https://basescan.org/address/0x85e7fc9c7e3834d9be8d60d1e3718a24d1f96678)
 
 ## Features
@@ -49,7 +49,7 @@ BaseGuardian Agent
 
 ## Smart Contract
 
-**CertificationRegistry**: `0x9fe8eEFa2421891Ee84337673baAf9Ec3C43081e`
+**CertificationRegistry**: `0x961711BD6f9921A4ccfA778ac0d14d553dF30be8`
 
 | Parameter | Value |
 |-----------|-------|

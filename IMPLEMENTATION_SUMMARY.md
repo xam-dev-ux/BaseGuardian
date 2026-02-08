@@ -104,7 +104,7 @@ BaseGuardian is a fully autonomous AI security agent for Base Mainnet that:
 ### Smart Contracts (100%) ✅
 
 #### CertificationRegistry.sol
-- **Deployed**: `0x9fe8eEFa2421891Ee84337673baAf9Ec3C43081e`
+- **Deployed**: `0x961711BD6f9921A4ccfA778ac0d14d553dF30be8`
 - **Network**: Base Mainnet (Chain ID: 8453)
 - **Features**:
   - `certify()` - Certify contracts with staked ETH (min 0.001 ETH)
@@ -241,7 +241,7 @@ To run BaseGuardian, you need:
 - [ ] Fund with >= 0.001 ETH on Base Mainnet
 
 ### Contract
-- [x] CERTIFICATION_CONTRACT_ADDRESS: `0x9fe8eEFa2421891Ee84337673baAf9Ec3C43081e`
+- [x] CERTIFICATION_CONTRACT_ADDRESS: `0x961711BD6f9921A4ccfA778ac0d14d553dF30be8`
 
 ## Usage
 
