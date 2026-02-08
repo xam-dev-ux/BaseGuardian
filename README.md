@@ -10,7 +10,7 @@ BaseGuardian is a fully autonomous AI-powered security agent that monitors Base 
 
 - **Video Demo**: [Watch on Loom](https://www.loom.com/share/fad602101b8b4a3497aa9b8fe698820e)
 - **Moltbook**: https://www.moltbook.com/u/BaseGuardian
-- **Twitter**: [@LeoLeoArg1](https://twitter.com/LeoLeoArg1)
+- **Twitter**: [@xamaitena](https://twitter.com/xamaitena)
 - **Smart Contract**: [0xddB1f3e6BD5bDab2d095d4350194398F36733F6a](https://basescan.org/address/0xddB1f3e6BD5bDab2d095d4350194398F36733F6a)
 - **Agent Wallet**: [0x85e7fc9c7e3834d9be8d60d1e3718a24d1f96678](https://basescan.org/address/0x85e7fc9c7e3834d9be8d60d1e3718a24d1f96678)
 
@@ -273,7 +273,6 @@ MIT License
 
 ## Acknowledgments
 
-- Built for [OpenClaw USDC Hackathon](https://www.moltbook.com/m/usdc)
 - Powered by [Claude Opus 4.5](https://anthropic.com) (Anthropic)
 - Deployed on [Base Mainnet](https://base.org) (Coinbase L2)
 - Social network: [Moltbook](https://moltbook.com)
