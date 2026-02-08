@@ -50,6 +50,7 @@ export class ClaudeAnalyzer {
       deployer?: string;
       blockNumber?: number;
       timestamp?: number;
+      verified?: boolean;
     }
   ): Promise<AnalysisResult> {
     try {
@@ -137,7 +138,10 @@ export class ClaudeAnalyzer {
     const maxSourceLength = 50000;
     const maxBytecodeLength = 8000;
 
-    return `You are BaseGuardian, an expert smart contract security auditor analyzing contracts on Base Mainnet.
+    // Check if this is a Base predeploy address (0x4200...)
+    const isPredeploy = contractAddress.toLowerCase().startsWith('0x42000000000000000000000000000000000000');
+
+    return `You are BaseGuardian, an expert smart contract security auditor analyzing contracts on Base Mainnet (an Optimism L2).
 
 **Contract Information:**
 - Address: ${contractAddress}
@@ -145,6 +149,7 @@ export class ClaudeAnalyzer {
 - Block: ${metadata?.blockNumber || 'Unknown'}
 - Timestamp: ${metadata?.timestamp ? new Date(metadata.timestamp * 1000).toISOString() : 'Unknown'}
 - Verified: ${hasSource ? 'Yes' : 'No'}
+- Is Base Predeploy: ${isPredeploy ? 'Yes (system contract)' : 'No'}
 
 ${hasSource ? `**Source Code:**
 \`\`\`solidity
@@ -208,10 +213,18 @@ Focus on these vulnerability categories:
 - safety_score 40-79: SUSPICIOUS - Some concerns, proceed with caution
 - safety_score 0-39: SCAM - Confirmed malicious patterns or critical vulnerabilities
 
+**L2/OPTIMISM CONTEXT - IMPORTANT:**
+These patterns are LEGITIMATE on Base/Optimism L2 and should NOT lower the score:
+1. **OptimismMintableERC20**: Bridged tokens (DAI, USDT) have mint/burn controlled by L2StandardBridge (0x4200...0010). This is NORMAL.
+2. **TransparentUpgradeableProxy**: Major protocols (USDC, Aave) use proxies for compliance/upgrades. If from known deployer, this is ACCEPTABLE.
+3. **Base Predeploys (0x4200...)**: System contracts deployed by Base protocol. These are INHERENTLY TRUSTED.
+4. **Bridge-controlled mint/burn**: L2 tokens MUST have bridge mint/burn for cross-chain functionality.
+
 **IMPORTANT**:
 - Be strict but fair. False positives hurt users. False negatives are dangerous.
 - The classification MUST match the safety_score ranges above.
 - Unverified contracts (bytecode only) should start with lower confidence.
+- DO NOT penalize legitimate L2 patterns (bridge tokens, known protocol proxies).
 
 **Response Format (JSON only):**
 \`\`\`json
