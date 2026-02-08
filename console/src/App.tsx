@@ -154,57 +154,57 @@ function Dashboard() {
           </div>
         )}
 
-        {/* Tabs */}
-        <div className="mb-6 border-b border-gray-700">
-          <div className="flex gap-4">
+        {/* Tabs - scrollable on mobile */}
+        <div className="mb-6 border-b border-gray-700 overflow-x-auto">
+          <div className="flex gap-1 sm:gap-4 min-w-max">
             <button
               onClick={() => setActiveTab('analyses')}
-              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium border-b-2 transition whitespace-nowrap ${
                 activeTab === 'analyses'
                   ? 'border-base-blue text-white'
                   : 'border-transparent text-gray-400 hover:text-white'
               }`}
             >
-              <Filter className="w-4 h-4" />
-              All Analyses ({contracts.length})
+              <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              Analyses ({contracts.length})
             </button>
             <button
               onClick={() => setActiveTab('certifications')}
-              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium border-b-2 transition whitespace-nowrap ${
                 activeTab === 'certifications'
                   ? 'border-base-blue text-white'
                   : 'border-transparent text-gray-400 hover:text-white'
               }`}
             >
-              <Award className="w-4 h-4" />
-              Certifications ({certifications.length})
+              <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              Certs ({certifications.length})
             </button>
             <button
               onClick={() => setActiveTab('alerts')}
-              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium border-b-2 transition whitespace-nowrap ${
                 activeTab === 'alerts'
                   ? 'border-base-blue text-white'
                   : 'border-transparent text-gray-400 hover:text-white'
               }`}
             >
-              <Bell className="w-4 h-4" />
-              SCAM Alerts ({alerts.length})
+              <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              Alerts ({alerts.length})
             </button>
           </div>
         </div>
 
         {/* Filter (only for analyses tab) */}
         {activeTab === 'analyses' && (
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-white">Recent Analyses</h2>
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-400" />
-              <div className="flex bg-base-gray rounded-lg p-1">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <h2 className="text-base sm:text-lg font-semibold text-white">Recent Analyses</h2>
+            <div className="flex items-center gap-2 overflow-x-auto">
+              <Filter className="w-4 h-4 text-gray-400 flex-shrink-0 hidden sm:block" />
+              <div className="flex bg-base-gray rounded-lg p-1 min-w-max">
                 {(['all', 'SAFE', 'SUSPICIOUS', 'SCAM'] as const).map((f) => (
                   <button
                     key={f}
                     onClick={() => setFilter(f)}
-                    className={`px-3 py-1 text-sm rounded-md transition ${
+                    className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md transition whitespace-nowrap ${
                       filter === f
                         ? 'bg-base-blue text-white'
                         : 'text-gray-400 hover:text-white'
