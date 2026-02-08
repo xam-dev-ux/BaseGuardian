@@ -449,6 +449,60 @@ export class DatabaseManager {
     stmt.run(id);
   }
 
+  // ===== API Queries =====
+
+  getAnalyses(options: { limit?: number; offset?: number; classification?: string } = {}): any[] {
+    const { limit = 50, offset = 0, classification } = options;
+
+    let query = 'SELECT * FROM analyses';
+    const params: any[] = [];
+
+    if (classification && ['SAFE', 'SUSPICIOUS', 'SCAM'].includes(classification)) {
+      query += ' WHERE classification = ?';
+      params.push(classification);
+    }
+
+    query += ' ORDER BY id DESC LIMIT ? OFFSET ?';
+    params.push(limit, offset);
+
+    return this.db.prepare(query).all(...params);
+  }
+
+  getCertificationsWithAnalyses(): any[] {
+    return this.db.prepare(`
+      SELECT c.*, a.risk_score, a.classification, a.explanation, a.confidence, a.threats
+      FROM certifications c
+      LEFT JOIN analyses a ON c.contract_address = a.contract_address
+      ORDER BY c.id DESC
+      LIMIT 50
+    `).all();
+  }
+
+  getContractDetails(address: string): { analysis: any; certification: any } | null {
+    const analysis = this.db.prepare(
+      'SELECT * FROM analyses WHERE contract_address = ? ORDER BY id DESC LIMIT 1'
+    ).get(address);
+
+    const certification = this.db.prepare(
+      'SELECT * FROM certifications WHERE contract_address = ?'
+    ).get(address);
+
+    if (!analysis && !certification) {
+      return null;
+    }
+
+    return { analysis, certification };
+  }
+
+  getScamContracts(limit: number = 20): any[] {
+    return this.db.prepare(`
+      SELECT * FROM analyses
+      WHERE classification = 'SCAM'
+      ORDER BY id DESC
+      LIMIT ?
+    `).all(limit);
+  }
+
   // ===== Utility =====
 
   close(): void {
