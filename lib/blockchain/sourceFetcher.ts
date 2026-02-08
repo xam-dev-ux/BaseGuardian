@@ -7,7 +7,9 @@ import axios from 'axios';
 import { appConfig } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
 
-const BASESCAN_API_URL = 'https://api.basescan.org/api';
+// Etherscan V2 API (unified endpoint with chainid)
+const BASESCAN_API_URL = 'https://api.etherscan.io/v2/api';
+const BASE_CHAIN_ID = 8453;
 
 export interface ContractSource {
   SourceCode: string;
@@ -48,6 +50,7 @@ export class SourceFetcher {
 
       const response = await axios.get(BASESCAN_API_URL, {
         params: {
+          chainid: BASE_CHAIN_ID,
           module: 'contract',
           action: 'getsourcecode',
           address: contractAddress,
@@ -135,6 +138,7 @@ export class SourceFetcher {
     try {
       const response = await axios.get(BASESCAN_API_URL, {
         params: {
+          chainid: BASE_CHAIN_ID,
           module: 'contract',
           action: 'getcontractcreation',
           contractaddresses: contractAddress,
