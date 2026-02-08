@@ -247,6 +247,7 @@ RPC throttling implemented with 100-500ms delays between calls.
 
 🎯 **Future Enhancements**:
 - Farcaster alerts via Neynar API (cross-post scam warnings to Warpcast)
+- BaseReview integration (send alerts to [BaseReview MiniApp](https://base.app/app/base-review.vercel.app) - community-powered reviews for Base MiniApps)
 - USDC staking (Circle CCTP)
 - Machine learning detection
 - Multi-agent coordination (distribute block monitoring across agents to analyze 100% of contracts instead of sampling every 10th block)
