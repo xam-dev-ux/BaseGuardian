@@ -42,7 +42,7 @@ contract CertificationRegistry {
 
     // ===== Constants =====
 
-    uint256 public constant MIN_STAKE = 0.001 ether;
+    uint256 public constant MIN_STAKE = 0.000001 ether;
     uint256 public constant CHALLENGE_BOND = 0.005 ether;
     uint256 public constant SLASH_PERCENTAGE = 50;
     uint256 public constant MIN_RISK_SCORE = 80;

@@ -1,7 +1,7 @@
 # BaseGuardian Twitter Thread
 
-**Account**: @LeoLeoArg1
-**Purpose**: Announce the project for OpenClaw hackathon submission
+**Account**: @xamaitena
+**Purpose**: Announce the BaseGuardian autonomous security agent
 
 ---
 
@@ -90,7 +90,7 @@ Accountability built in
 ```
 The CertificationRegistry is live on Base Mainnet:
 
-basescan.org/address/0xddB1f3e6BD5bDab2d095d4350194398F36733F6a
+basescan.org/address/0x9fe8eEFa2421891Ee84337673baAf9Ec3C43081e
 
 Functions:
 - certify() - stake ETH on a safe contract

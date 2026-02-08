@@ -23,7 +23,7 @@ export class CertificationManager {
 
   /**
    * Certify a safe contract onchain
-   * Note: Accepts safety_score (100 = safe) but smart contract expects risk_score (0 = safe)
+   * Note: Smart contract parameter is named riskScore but actually expects safety_score (80-100 = safe)
    */
   async certifyContract(
     contractAddress: string,
@@ -38,9 +38,9 @@ export class CertificationManager {
     try {
       logger.info('Starting onchain certification', { contractAddress });
 
-      // Convert safety_score to risk_score for smart contract (inverted)
-      // safety_score 100 (safest) -> risk_score 0 (lowest risk)
-      const riskScore = 100 - analysis.safety_score;
+      // Smart contract expects score between 80-100 for safe contracts
+      // Despite the parameter name "riskScore", it actually expects the safety score
+      const riskScore = analysis.safety_score;
 
       // Create certification metadata
       const metadata = {
@@ -69,8 +69,8 @@ export class CertificationManager {
 
       logger.info('Metadata uploaded', { ipfsHash });
 
-      // Calculate stake amount based on confidence (min 0.000001 ETH = 1 gwei)
-      const stakeEth = Math.max(0.000001, (analysis.confidence / 100) * 0.0001);
+      // Use minimum stake of 0.000001 ETH as required by smart contract
+      const stakeEth = 0.000001;
       const stakeAmount = ethers.parseEther(stakeEth.toString());
 
       // Get certification contract

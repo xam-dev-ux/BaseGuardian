@@ -18,7 +18,7 @@
 
 ### 2. Smart Contract
 - [x] CertificationRegistry deployed to Base Mainnet
-- [x] Contract address: `0xddB1f3e6BD5bDab2d095d4350194398F36733F6a`
+- [x] Contract address: `0x9fe8eEFa2421891Ee84337673baAf9Ec3C43081e`
 - [x] CERTIFICATION_CONTRACT_ADDRESS updated in `.env`
 - [ ] Contract verified on BaseScan (manual verification instructions provided)
 
