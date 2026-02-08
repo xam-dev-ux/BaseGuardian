@@ -39,7 +39,17 @@ export function ContractDetail({ contract, onClose }: ContractDetailProps) {
       abi: CERTIFICATION_ABI,
       functionName: 'challenge',
       args: [contract.contract_address as `0x${string}`],
-      value: parseEther('0.005'),
+      value: parseEther('0.001'),
+    })
+  }
+
+  const handleRequestReview = () => {
+    writeContract({
+      address: CERTIFICATION_CONTRACT as `0x${string}`,
+      abi: CERTIFICATION_ABI,
+      functionName: 'challenge',
+      args: [contract.contract_address as `0x${string}`],
+      value: parseEther('0.001'),
     })
   }
 
@@ -195,7 +205,7 @@ export function ContractDetail({ contract, onClose }: ContractDetailProps) {
             </div>
           )}
 
-          {/* Challenge Section */}
+          {/* Challenge Section - For SAFE certified contracts */}
           {contract.classification === 'SAFE' && contract.certification && (
             <div className="border-t border-gray-700 pt-6">
               <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-4">
@@ -204,7 +214,7 @@ export function ContractDetail({ contract, onClose }: ContractDetailProps) {
                   Challenge Certification
                 </h3>
                 <p className="text-sm text-gray-300 mb-2">
-                  Think this contract was incorrectly certified as SAFE? Challenge it by posting a 0.005 ETH bond.
+                  Think this contract was incorrectly certified as SAFE? Challenge it by posting a 0.001 ETH bond.
                 </p>
                 <p className="text-xs text-gray-400">
                   If your challenge is valid, you'll receive 50% of the guardian's stake + your bond back.
@@ -242,7 +252,68 @@ export function ContractDetail({ contract, onClose }: ContractDetailProps) {
                   ) : (
                     <>
                       <Swords className="w-5 h-5" />
-                      Challenge (0.005 ETH Bond)
+                      Challenge (0.001 ETH Bond)
+                    </>
+                  )}
+                </button>
+              )}
+
+              {error && (
+                <p className="text-red-400 text-sm mt-2 text-center">
+                  Error: {error.message.slice(0, 100)}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Request Review Section - For SCAM/SUSPICIOUS contracts */}
+          {(contract.classification === 'SCAM' || contract.classification === 'SUSPICIOUS') && (
+            <div className="border-t border-gray-700 pt-6">
+              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mb-4">
+                <h3 className="text-blue-400 font-semibold mb-2 flex items-center gap-2">
+                  <Shield className="w-5 h-5" />
+                  Request Manual Review
+                </h3>
+                <p className="text-sm text-gray-300 mb-2">
+                  Think this contract was incorrectly classified as {contract.classification}? Request a manual review by posting a 0.001 ETH bond.
+                </p>
+                <p className="text-xs text-gray-400">
+                  If the review determines this is a legitimate safe contract, you'll receive your bond back + potential certification.
+                </p>
+              </div>
+
+              {!isConnected ? (
+                <p className="text-center text-gray-400 text-sm">
+                  Connect your wallet to request a review
+                </p>
+              ) : isSuccess ? (
+                <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-center">
+                  <Check className="w-8 h-8 text-green-500 mx-auto mb-2" />
+                  <p className="text-green-400 font-medium">Review requested!</p>
+                  <a
+                    href={`https://basescan.org/tx/${hash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-base-blue hover:underline"
+                  >
+                    View transaction
+                  </a>
+                </div>
+              ) : (
+                <button
+                  onClick={handleRequestReview}
+                  disabled={isPending || isConfirming}
+                  className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2"
+                >
+                  {isPending || isConfirming ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      {isPending ? 'Confirm in wallet...' : 'Processing...'}
+                    </>
+                  ) : (
+                    <>
+                      <Shield className="w-5 h-5" />
+                      Request Review (0.001 ETH Bond)
                     </>
                   )}
                 </button>

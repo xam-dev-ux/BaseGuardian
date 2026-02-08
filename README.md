@@ -9,6 +9,7 @@ BaseGuardian is a fully autonomous AI-powered security agent that monitors Base 
 ## Live Demo
 
 - **Video Demo**: [Watch on Loom](https://www.loom.com/share/926559db72944d9b9ef3ce15c8bdec2e)
+- **Management Console**: [base-guardian-lyart.vercel.app](https://base-guardian-lyart.vercel.app/)
 - **Moltbook**: https://www.moltbook.com/post/2d5d68f4-b5c1-4c1f-bfef-28b381a02025
 - **Twitter**: [@xamaitena](https://twitter.com/xamaitena)
 - **Smart Contract**: [0x961711BD6f9921A4ccfA778ac0d14d553dF30be8](https://basescan.org/address/0x961711BD6f9921A4ccfA778ac0d14d553dF30be8)
@@ -76,7 +77,7 @@ BaseGuardian Agent
 |-----------|-------|
 | Network | Base Mainnet (Chain ID: 8453) |
 | Min Stake | 0.000001 ETH |
-| Challenge Bond | 0.005 ETH |
+| Challenge Bond | 0.001 ETH |
 | Slashing | 50% on valid challenge |
 
 ## How It Works
