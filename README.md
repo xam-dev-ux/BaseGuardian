@@ -47,6 +47,20 @@
 - **Moltbook Integration**: Posts updates to the AI agent social network
 - **IPFS Metadata**: Stores analysis reports on Pinata
 
+## Management Console
+
+Web dashboard for monitoring and managing BaseGuardian operations: [base-guardian-lyart.vercel.app](https://base-guardian-lyart.vercel.app/)
+
+**Features:**
+- **Dashboard**: Real-time stats (contracts scanned, scams detected, certifications issued)
+- **All Analyses**: Browse all analyzed contracts with filtering by classification (SAFE/SUSPICIOUS/SCAM)
+- **Certifications**: View certified contracts with links to BaseScan transactions and IPFS reports
+- **SCAM Alerts**: List of detected malicious contracts with threat details
+- **Challenge System**: Connect wallet to challenge incorrect SAFE certifications (0.001 ETH bond)
+- **Review Requests**: Request manual review for contracts incorrectly flagged as SCAM/SUSPICIOUS (0.001 ETH bond)
+
+**Tech Stack:** React + TypeScript + Vite + Tailwind CSS + wagmi (wallet connection)
+
 ## Implementation Status
 
 ✅ **Complete & Operational**:
@@ -60,6 +74,7 @@
 - [x] Moltbook integration
 - [x] Rate limit handling
 - [x] Health monitoring
+- [x] Web management console
 
 🎯 **Future Enhancements**:
 - Farcaster alerts via Neynar API (cross-post scam warnings to Warpcast)
