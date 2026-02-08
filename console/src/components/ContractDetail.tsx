@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useChainId } from 'wagmi'
 import { parseEther } from 'viem'
+import { base } from 'wagmi/chains'
 import {
   X,
   ExternalLink,
@@ -11,6 +12,7 @@ import {
   Check,
   Loader2,
   Swords,
+  RefreshCw,
 } from 'lucide-react'
 import type { ContractAnalysis } from '../types'
 import { CERTIFICATION_CONTRACT, CERTIFICATION_ABI } from '../config/wagmi'
@@ -23,6 +25,10 @@ interface ContractDetailProps {
 export function ContractDetail({ contract, onClose }: ContractDetailProps) {
   const [copied, setCopied] = useState(false)
   const { isConnected } = useAccount()
+  const chainId = useChainId()
+  const { switchChain, isPending: isSwitching } = useSwitchChain()
+
+  const isWrongChain = chainId !== base.id
 
   const { writeContract, data: hash, isPending, error } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
@@ -33,6 +39,10 @@ export function ContractDetail({ contract, onClose }: ContractDetailProps) {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const handleSwitchToBase = () => {
+    switchChain({ chainId: base.id })
+  }
+
   const handleChallenge = () => {
     writeContract({
       address: CERTIFICATION_CONTRACT as `0x${string}`,
@@ -40,6 +50,7 @@ export function ContractDetail({ contract, onClose }: ContractDetailProps) {
       functionName: 'challenge',
       args: [contract.contract_address as `0x${string}`],
       value: parseEther('0.001'),
+      chainId: base.id,
     })
   }
 
@@ -48,6 +59,7 @@ export function ContractDetail({ contract, onClose }: ContractDetailProps) {
       address: CERTIFICATION_CONTRACT as `0x${string}`,
       abi: CERTIFICATION_ABI,
       functionName: 'challenge',
+      chainId: base.id,
       args: [contract.contract_address as `0x${string}`],
       value: parseEther('0.001'),
     })
@@ -225,6 +237,24 @@ export function ContractDetail({ contract, onClose }: ContractDetailProps) {
                 <p className="text-center text-gray-400 text-sm">
                   Connect your wallet to challenge this certification
                 </p>
+              ) : isWrongChain ? (
+                <button
+                  onClick={handleSwitchToBase}
+                  disabled={isSwitching}
+                  className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2"
+                >
+                  {isSwitching ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Switching...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="w-5 h-5" />
+                      Switch to Base Network
+                    </>
+                  )}
+                </button>
               ) : isSuccess ? (
                 <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-center">
                   <Check className="w-8 h-8 text-green-500 mx-auto mb-2" />
@@ -286,6 +316,24 @@ export function ContractDetail({ contract, onClose }: ContractDetailProps) {
                 <p className="text-center text-gray-400 text-sm">
                   Connect your wallet to request a review
                 </p>
+              ) : isWrongChain ? (
+                <button
+                  onClick={handleSwitchToBase}
+                  disabled={isSwitching}
+                  className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2"
+                >
+                  {isSwitching ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Switching...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="w-5 h-5" />
+                      Switch to Base Network
+                    </>
+                  )}
+                </button>
               ) : isSuccess ? (
                 <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-center">
                   <Check className="w-8 h-8 text-green-500 mx-auto mb-2" />
