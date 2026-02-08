@@ -1,5 +1,5 @@
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
-import { Shield, Wallet, LogOut, ExternalLink } from 'lucide-react'
+import { Wallet, LogOut, ExternalLink } from 'lucide-react'
 import { AGENT_WALLET } from '../config/wagmi'
 
 export function Header() {
@@ -13,9 +13,7 @@ export function Header() {
     <header className="border-b border-base-gray bg-base-dark/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="bg-base-blue p-2 rounded-lg">
-            <Shield className="w-6 h-6 text-white" />
-          </div>
+          <img src="/logo.png" alt="BaseGuardian" className="w-12 h-12 rounded-lg" />
           <div>
             <h1 className="text-xl font-bold text-white">BaseGuardian</h1>
             <p className="text-xs text-gray-400">Security Console</p>
